@@ -106,14 +106,15 @@ export class FutuPlant {
       unixTimestampConverter(mature_at).toLocaleString();
     const seedCreatedAtLocalTime =
       unixTimestampConverter(create_at).toLocaleString();
+    const numberOfWaterLeftToday = water_limit_num - water_done_num;
     const seedStatusLog =
       `🌱🌱🌱 Your seed (id: ${seed_id}) was created at: ${seedCreatedAtLocalTime}\n` +
       `🌸🌸🌸 Your seed will be mature at: ${seedMatureLocalTime}\n` +
-      `🚿🚿🚿 You watered this plant for ${water_done_num} times today (out of ${water_limit_num} times). You can water it for ${
-        water_limit_num - water_done_num
-      } more times today. (this.isMatured ${this.isMatured})`;
+      `🚿🚿🚿 You watered this plant for ${water_done_num} times today (out of ${water_limit_num} times). You can water it for ${numberOfWaterLeftToday} more times today. (this.isMatured ${this.isMatured})`;
     const seedWaterStatusLog = `${
-      frozen_to_timestamp === 0
+      numberOfWaterLeftToday === 0
+        ? '👆👆👆 You have no more water left today!'
+        : frozen_to_timestamp === 0
         ? '👆👆👆 Water now!'
         : `🙌🙌🙌 You can water this plant again in ~${(
             frozen_to_timestamp / 60
