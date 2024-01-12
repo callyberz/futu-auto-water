@@ -107,10 +107,10 @@ export class FutuPlant {
     } = this.seed;
     const seedMatureLocalTime = unixTimestampConverter(
       mature_at
-    ).toLocaleString('en-US', { timeZone: 'US/Central' });
+    ).toLocaleString('en-US', { timeZone: 'America/Chicago' });
     const seedCreatedAtLocalTime = unixTimestampConverter(
       create_at
-    ).toLocaleString('en-US', { timeZone: 'US/Central' });
+    ).toLocaleString('en-US', { timeZone: 'America/Chicago' });
     const numberOfWaterLeftToday = water_limit_num - water_done_num;
     const seedStatusLog =
       `🌱🌱🌱 Your seed (id: ${seed_id}) was created at: ${seedCreatedAtLocalTime}\n` +
