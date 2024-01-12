@@ -109,11 +109,11 @@ export class FutuPlant {
 
     const seedMatureLocalTime = moment
       .unix(mature_at)
-      .tz('America/Chicago')
+      .tz('America/New_York')
       .format('YYYY-MM-DD HH:mm:ss');
     const seedCreatedAtLocalTime = moment
       .unix(create_at)
-      .tz('America/Chicago')
+      .tz('America/New_York')
       .format('YYYY-MM-DD HH:mm:ss');
     // const seedCreatedAtLocalTime = unixTimestampConverter(
     //   create_at
