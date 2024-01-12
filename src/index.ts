@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import cron from 'node-cron';
+import moment from 'moment-timezone';
 import { CULTURE_ROOM_URL } from './constants';
 import { addSecondsToCurrentTime, unixTimestampConverter } from './utils';
 import type { Seed, SeedResponse } from './type';
@@ -105,12 +106,18 @@ export class FutuPlant {
       frozen_to_timestamp,
       create_at
     } = this.seed;
-    const seedMatureLocalTime = unixTimestampConverter(
-      mature_at
-    ).toLocaleString('en-US', { timeZone: 'America/Chicago' });
-    const seedCreatedAtLocalTime = unixTimestampConverter(
-      create_at
-    ).toLocaleString('en-US', { timeZone: 'America/Chicago' });
+
+    const seedMatureLocalTime = moment
+      .unix(mature_at)
+      .tz('America/Chicago')
+      .format('YYYY-MM-DD HH:mm:ss');
+    const seedCreatedAtLocalTime = moment
+      .unix(create_at)
+      .tz('America/Chicago')
+      .format('YYYY-MM-DD HH:mm:ss');
+    // const seedCreatedAtLocalTime = unixTimestampConverter(
+    //   create_at
+    // ).toLocaleString('en-US', { timeZone: 'America/Chicago' });
     const numberOfWaterLeftToday = water_limit_num - water_done_num;
     const seedStatusLog =
       `🌱🌱🌱 Your seed (id: ${seed_id}) was created at: ${seedCreatedAtLocalTime}\n` +
