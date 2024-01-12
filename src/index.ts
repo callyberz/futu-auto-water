@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import cron from 'node-cron';
 import { CULTURE_ROOM_URL } from './constants';
 import { addSecondsToCurrentTime, unixTimestampConverter } from './utils';
 import type { Seed, SeedResponse } from './type';
@@ -53,6 +54,8 @@ export class FutuPlant {
   }
 
   async waterMyPlant() {
+    const { data } = await FutuPlant.getMyPlantData();
+    this.seed = data.seed;
     const formData = new URLSearchParams();
     formData.append('seed_id', this.seed.seed_id.toString());
 
@@ -102,10 +105,12 @@ export class FutuPlant {
       frozen_to_timestamp,
       create_at
     } = this.seed;
-    const seedMatureLocalTime =
-      unixTimestampConverter(mature_at).toLocaleString();
-    const seedCreatedAtLocalTime =
-      unixTimestampConverter(create_at).toLocaleString();
+    const seedMatureLocalTime = unixTimestampConverter(
+      mature_at
+    ).toLocaleString('en-US', { timeZone: 'US/Central' });
+    const seedCreatedAtLocalTime = unixTimestampConverter(
+      create_at
+    ).toLocaleString('en-US', { timeZone: 'US/Central' });
     const numberOfWaterLeftToday = water_limit_num - water_done_num;
     const seedStatusLog =
       `🌱🌱🌱 Your seed (id: ${seed_id}) was created at: ${seedCreatedAtLocalTime}\n` +
@@ -124,6 +129,16 @@ export class FutuPlant {
     }`;
     return `${seedStatusLog}\n${seedWaterStatusLog}`;
   }
+
+  // Schedule the task to run at 2 PM, 4 PM, and 6 PM EST every day
+  // The cron syntax is '0 19,21,23 * * *', which means at minute 0 of hour 19, 21, and 23 UTC
+  // This corresponds to 2 PM, 4 PM, and 6 PM EST
+  startWateringCronJob() {
+    console.log("🌱🌱🌱 I'm starting the cron job now");
+    cron.schedule('0 19,21,23 * * *', () => {
+      this.waterMyPlant();
+    });
+  }
 }
 
 async function main() {
@@ -133,6 +148,7 @@ async function main() {
     throw new Error('No seed data found');
   }
   const mySeed = new FutuPlant(seed);
+  mySeed.startWateringCronJob();
 
   const telegramBot = new TelegramService(
     () => mySeed.getCurrentStatusLog(),
