@@ -137,11 +137,10 @@ export class FutuPlant {
     return `${seedStatusLog}\n${seedWaterStatusLog}`;
   }
 
-  // Schedule the task to run at 1 PM, 4 PM, and 7 PM EST every day
-  // at every minute 0 of hour 18, 21, and 24 UTC
+  // Schedule the task to run at 12 PM, 3 PM, and 6 PM EST every day
   startWateringCronJob() {
     console.log("🌱🌱🌱 I'm starting the cron job now");
-    cron.schedule('0 18,21,24 * * *', () => {
+    cron.schedule('0 17,20,23 * * *', () => {
       this.waterMyPlant();
     });
   }
